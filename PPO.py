@@ -203,7 +203,7 @@ class PPO:
                 mb_logp.append(logp)
 
                 obs, rewards, terminated, truncated, _ = env.step(actions)
-                dones = tf.logical_or(terminated, truncated)
+                dones = terminated
                 dones = tf.cast(dones, tf.float32)
 
                 mb_rewards.append(rewards)
@@ -224,7 +224,7 @@ class PPO:
             mb_logp = np.concatenate(mb_logp, axis=0)
             
             lr_now = lr(1.0 - e/nepisodes)
-            self.train(mb_obs, returns, mb_actions, mb_values, mb_logp, clip_range, lr_now, mb_size, epochs=epochs_per_ep)
+            # self.train(mb_obs, returns, mb_actions, mb_values, mb_logp, clip_range, lr_now, mb_size, epochs=epochs_per_ep)
             avg_score = np.mean(score_history[-300:] if len(score_history)>300 else score_history)
             if e%1==0:
                 print(f'step {e}/{nepisodes}, avg score: {avg_score:.3f}')

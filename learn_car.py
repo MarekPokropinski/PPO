@@ -5,12 +5,6 @@ if __name__ == '__main__':
     from PPO import PPO
     from utils import LuminanceWrapper, StackObservation, ScaleObservation, normalize_obs, BoundAction
 
-    def make_env():
-        env = gym.make('CarRacing-v2')
-        env = normalize_obs(env)
-        env = BoundAction(env, low=0, high=1)
-        return env
-
     env = gym.vector.make('CarRacing-v2', num_envs=6, wrappers=[normalize_obs, BoundAction])
     ppo = PPO(env.observation_space, env.action_space, entropy_coeff=0.001)
     ppo.load('models/car')

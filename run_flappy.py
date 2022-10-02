@@ -21,11 +21,11 @@ if __name__ == '__main__':
     import imageio
 
     single_env = make_env()
-    env = gym.vector.SyncVectorEnv([lambda: single_env, make_env])
+    env = gym.vector.SyncVectorEnv([lambda: single_env])
 
     ppo = PPO(env.observation_space, env.action_space)
 
-    ppo.load('models/flappy')
+    ppo.load('models~/flappy')
 
     while True:
         done = False
@@ -33,17 +33,16 @@ if __name__ == '__main__':
         step = 0
         score = 0
 
-        for i in range(100000):
+        while not done:
             action, _, _ = ppo.act(obs)
-            obs_, reward, done, _, _ = env.step(action)
+            obs_, [reward], [done], _, _ = env.step(action)
 
             single_env.render()
             score += reward
 
-            if done[0]:
-                print(score[0])
-                score[0] = 0
+            if done:
+                print(score)
+                score = 0
             obs = obs_
             step += 1
 
-        break
